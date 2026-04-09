@@ -1,5 +1,6 @@
 import cv2
 
+
 def preprocess_image(img):
     img = img[60:135, :, :]
     img = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
@@ -8,7 +9,9 @@ def preprocess_image(img):
     img = img / 255.0
     return img
 
+
 def load_and_preprocess(image_path):
     img = cv2.imread(image_path)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = preprocess_image(img)
     return img
