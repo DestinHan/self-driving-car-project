@@ -4,7 +4,6 @@ import random
 
 
 def augment_image(img, steering_angle, training_model=True):
-    """BGR in/out (cv2.imread). Before preprocess_image, convert BGR→RGB."""
     if not training_model:
         return img, steering_angle
 
