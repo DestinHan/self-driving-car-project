@@ -1,4 +1,4 @@
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, save_model
 from tensorflow.keras.layers import Conv2D, Flatten, Dense, Dropout
 
 def build_model():
@@ -22,3 +22,10 @@ def build_model():
     model.compile(loss='mse', optimizer='adam')
 
     return model
+
+def train(x_train, x_test, y_train, y_test, epochs, batch_size=1):
+    model = build_model()
+    h = model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=epochs, batch_size=batch_size)  
+
+    save_model(model, "../simulator/model.h5")
+    return h
