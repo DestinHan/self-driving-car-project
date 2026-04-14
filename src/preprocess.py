@@ -1,4 +1,5 @@
 import cv2
+import random
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -18,6 +19,36 @@ def load_and_preprocess(image_path):
     img = preprocess_image(img)
     return img
 
+
+def balance_data(data, bin_size=1000):
+	bins = 35
+
+
+	_, bin_edges = np.histogram(data["steering"], bins=bins)
+
+	extra_vals = []
+	for i in range(bins):
+		left = bin_edges[i]
+		right = bin_edges[i+1]
+
+		bin_vals = []
+		for j, row in data.iterrows():
+
+			# if inside the bin
+			if row["steering"] >= left and row["steering"] < right:
+				bin_vals.append(j)
+
+		if len(bin_vals) > bin_size:
+			leftover = len(bin_vals) - bin_size
+			drop = random.sample(bin_vals, leftover)
+			
+			extra_vals.extend(drop)
+
+	# delete and fixes index
+	data = data.drop(extra_vals).reset_index(drop=True)
+	return data
+
+    
 
 def load_data():
     df = pd.read_csv("../dataset/driving_log.csv", header=None)
