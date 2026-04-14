@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def show_result(history, epochs):
-	
+def show_result(history, epochs=None):
+    ran_epochs = len(history.history["loss"])
+    x = np.arange(ran_epochs)
+
     plt.figure(figsize=(8, 5))
-    plt.plot(np.arange(epochs), history.history["loss"], label="Training Loss")
-    plt.plot(np.arange(epochs), history.history["val_loss"], label="Validation Loss")
+    plt.plot(x, history.history["loss"], label="Training Loss")
+    plt.plot(x, history.history["val_loss"], label="Validation Loss")
     plt.title("Training and Validation Loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")

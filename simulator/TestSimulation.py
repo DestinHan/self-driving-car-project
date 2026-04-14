@@ -1,19 +1,20 @@
+import cv2
+from PIL import Image
+from io import BytesIO
+import base64
+from flask import Flask
+from tensorflow.keras.models import load_model
+import numpy as np
+import eventlet
+import socketio
 import os
 print('Setting Up ...')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-import socketio
-import eventlet
-import numpy as np
-from tensorflow.keras.models import load_model
-from flask import Flask
-import base64
-from io import BytesIO
-from PIL import Image
-import cv2
 
 sio = socketio.Server()
-app = Flask(__name__) #__main__
+app = Flask(__name__)  # __main__
 maxSpeed = 10
+
 
 def preProcessing(img):
     img = img[60:135, :, :]
@@ -27,13 +28,17 @@ def preProcessing(img):
 
 @sio.on('telemetry')
 def telemetry(sid, data):
+    if not data or 'image' not in data:
+        sendControl(0, 0)
+        return
+
     speed = float(data['speed'])
     image = Image.open(BytesIO(base64.b64decode(data['image'])))
     image = np.asarray(image)
     image = preProcessing(image)
     image = np.array([image])
     steering = float(model.predict(image))
-    throttle = 1.0 - speed/maxSpeed
+    throttle = max(0.20, 1.0 - speed / maxSpeed)
     print(f'{throttle}, {steering}, {speed}')
     sendControl(steering, throttle)
 
@@ -46,11 +51,12 @@ def connect(sid, environ):
 
 def sendControl(steering, throttle):
     sio.emit('steer', data={
-        'steering_angle' : steering.__str__(),
-        'throttle' : throttle.__str__()
+        'steering_angle': steering.__str__(),
+        'throttle': throttle.__str__()
     })
 
+
 if __name__ == "__main__":
-    model = load_model('./models/model.h5')
+    model = load_model('./models/model.h5', compile=False)
     app = socketio.Middleware(sio, app)
     eventlet.wsgi.server(eventlet.listen(('', 4567)), app)

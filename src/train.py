@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from evaluation import show_result
 
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 
 from model import build_model
 from preprocess import preprocess_image, balance_data
@@ -77,18 +78,35 @@ def main():
     train_generator = batch_generator(X_train, y_train, batch_size, True)
     valid_generator = batch_generator(X_valid, y_valid, batch_size, False)
 
+    os.makedirs("models", exist_ok=True)
+    callbacks = [
+        ModelCheckpoint(
+            "models/model.h5",
+            monitor="val_loss",
+            mode="min",
+            save_best_only=True,
+            verbose=1,
+        ),
+        EarlyStopping(
+            monitor="val_loss",
+            mode="min",
+            patience=4,
+            restore_best_weights=True,
+            verbose=1,
+        ),
+    ]
+
     history = model.fit(
         train_generator,
         steps_per_epoch=max(1, len(X_train) // batch_size),
         validation_data=valid_generator,
         validation_steps=max(1, len(X_valid) // batch_size),
         epochs=epochs,
+        callbacks=callbacks,
         verbose=1
     )
 
-    os.makedirs("models", exist_ok=True)
-    model.save("models/model.h5")
-    print("Model saved to models/model.h5")
+    print("Best model saved to models/model.h5")
 
     os.makedirs("outputs", exist_ok=True)
 
