@@ -1,5 +1,6 @@
 from tensorflow.keras.models import Sequential, save_model
 from tensorflow.keras.layers import Conv2D, Flatten, Dense, Dropout
+from tensorflow.keras.optimizers import Adam
 
 def build_model():
     model = Sequential()
@@ -19,9 +20,12 @@ def build_model():
 
     model.add(Dense(1))
 
-    model.compile(loss='mse', optimizer='adam')
+    optimizer = Adam(lr=0.0001)
+    model.compile(loss='mse', optimizer=optimizer)
 
     return model
+
+
 
 def train(x_train, x_test, y_train, y_test, epochs, batch_size=1):
     model = build_model()
