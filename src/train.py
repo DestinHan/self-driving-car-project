@@ -4,11 +4,12 @@ import cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from evaluation import show_result
 
 from sklearn.model_selection import train_test_split
 
 from model import build_model
-from preprocess import preprocess_image
+from preprocess import preprocess_image, balance_data
 from augmentation import augment_image
 
 
@@ -49,6 +50,8 @@ def main():
         names=["center", "left", "right", "steering", "throttle", "brake", "speed"]
     )
 
+    data = balance_data(data)
+
     print(data.head())
     print(data.columns)
 
@@ -68,8 +71,8 @@ def main():
     model = build_model()
     model.summary()
 
-    batch_size = 32
-    epochs = 5
+    batch_size = 64
+    epochs = 20
 
     train_generator = batch_generator(X_train, y_train, batch_size, True)
     valid_generator = batch_generator(X_valid, y_valid, batch_size, False)
@@ -89,17 +92,7 @@ def main():
 
     os.makedirs("outputs", exist_ok=True)
 
-    plt.figure(figsize=(8, 5))
-    plt.plot(history.history["loss"], label="Training Loss")
-    plt.plot(history.history["val_loss"], label="Validation Loss")
-    plt.title("Training and Validation Loss")
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.legend()
-    plt.grid(True)
-    plt.savefig("outputs/loss_plot.png")
-    plt.show()
-
+    show_result(history, epochs)
     print("Loss plot saved to outputs/loss_plot.png")
 
 
