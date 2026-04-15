@@ -41,6 +41,14 @@ Successfully trained model from the collected dataset, that can complete the car
 However, the model does struggle when facing scenarios not faced during dataset recording such as being manually put in unfamiliar positions.  
 
 ## 6. Challenges and Solutions
+During our project implementation we faced a few challenges:
+- Different TensorFlow versions caused confusion and errors. We standardized on TensorFlow 2.19.1 for the whole team.
+- Thinking 20 epochs would always be best. Training can stop improving earlier on validation, so we used early stopping and saved the best validation checkpoint (in our runs this often stopped around 15 epochs, but the number depends on validation, not a fixed choice).
+- Different driving behavior on different laptops. We focused on matching the same model file, same dependencies, and the same Term 1 simulator setup. 
+- The car did not move during testing. This was fixed by using the Term 1 behavioral cloning simulator instead of Term 2.
+- Augmentation was too harsh. We reduced how often augmentations were applied by using a 0.3 probability for several transforms.
+- Training runs looked different each time because random batch sampling changes training dynamics. We added code in train.py to save the best model based on validation loss, so we keep the best weights instead of assuming the last epoch is best.
+
 
 ## 7. How to Run the Project
 1. Install required dependencies  
