@@ -24,6 +24,14 @@ To improve model performance, we applied several preprocessing steps:
 - Applied Gaussian blur to reduce noise  
 - Resized images to 200×66 pixels  
 - Normalized pixel values to the range [0, 1]  
+### Augmentation
+To further improve model performance and prevent overfitting, we used the following augmentation techniques:
+- Image flipping
+- Brightness adjustments
+- Zoom
+- Panning
+- Rotations
+
 
 ## 4. Model Architecture
 
@@ -49,8 +57,27 @@ During our project implementation we faced a few challenges:
 - Augmentation was too harsh. We reduced how often augmentations were applied by using a 0.3 probability for several transforms.
 - Training runs looked different each time because random batch sampling changes training dynamics. We added code in train.py to save the best model based on validation loss, so we keep the best weights instead of assuming the last epoch is best.
 
+## 6. Work Distribution
 
-## 7. How to Run the Project
+### Anna
+- Implemented various data augmentation techniques
+- Debugged issues in the model training process
+- Tuned hyperparameters to improve model performance
+- Tested and evaluated model results 
+### Seung
+- Designed and implemented image preprocessing
+- Created the CNN model architecture
+- Incorporated batch generation for large dataset loading
+- Developed the model training process
+### Tommy
+- Prepared dataset from the simulator
+- Analyzed and visualized the data
+- Balanced the dataset to reduce straight driving bias
+- Assisted in testing and tuning hyperparameters to improve performance
+
+
+
+## 8. How to Run the Project
 1. Use Python 3.11 in a virtual environment.
 2. Install dependencies:
    pip install tensorflow==2.19.1 pandas==2.2.3 python-socketio==4.6.1 python-engineio==3.13.2 eventlet flask pillow opencv-python matplotlib scikit-learn
@@ -59,7 +86,7 @@ During our project implementation we faced a few challenges:
 5. Copy the trained model: cp models/model.h5 model.h5  
 6. Run the simulator and test script: python simulator/TestSimulation.py  
 
-## 8. Conclusion
+## 9. Conclusion
 
 Overall the project demonstrates the ability of using convolutional neural networks in autonomous driving tasks. Training using the simulator data allowed the model to effectively learn how to steer from the simulator’s visual input.
 
