@@ -51,10 +51,13 @@ During our project implementation we faced a few challenges:
 
 
 ## 7. How to Run the Project
-1. Install required dependencies  
-2. Run the training script: python src/train.py  
-3. Copy the trained model: cp models/model.h5 model.h5  
-4. Run the simulator and test script: python simulator/TestSimulation.py  
+1. Use Python 3.11 in a virtual environment.
+2. Install dependencies:
+   pip install tensorflow==2.19.1 pandas==2.2.3 python-socketio==4.6.1 python-engineio==3.13.2 eventlet flask pillow opencv-python matplotlib scikit-learn
+3. Use the Udacity Term 1 behavioral cloning simulator 
+4. Run the training script: python src/train.py  
+5. Copy the trained model: cp models/model.h5 model.h5  
+6. Run the simulator and test script: python simulator/TestSimulation.py  
 
 ## 8. Conclusion
 
